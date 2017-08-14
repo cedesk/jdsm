@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2008, Roberto Milev
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or 
+without modification, are permitted provided that the following 
+conditions are met:
+
+    * Redistributions of source code must retain the above 
+      copyright notice, this list of conditions and the following 
+      disclaimer.
+    * Redistributions in binary form must reproduce the above 
+      copyright notice, this list of conditions and the following 
+      disclaimer in the documentation and/or other materials 
+      provided with the distribution.
+    * Neither the name of the Carleton University nor the names 
+      of its contributors may be used to endorse or promote 
+      products derived from this software without specific prior 
+      written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+-->
+<project name="project" default="get.results">
+	<property file="ant.properties"/>
+
+	<property name="bus.treshold" value="0.1"/>
+	<property name="results.folder" value="../results"/>
+	
+    <path id="path">
+        <pathelement location="../classes"/>
+       	<fileset file="../lib/*.jar"/>
+       	<fileset file="../dist/*.jar"/>
+	</path>
+	
+    <taskdef resource="dependencyfindertasks.properties">
+        <classpath refid="path"/>
+    </taskdef>
+
+    <target name="get.dependencies" depends="">
+        <dependencyextractor destfile="../results/dependencies.xml" xml="yes" filterincludes="${package.filter}">
+            <path>
+            	<pathelement  location="${lib.path}"/>
+            </path>
+        </dependencyextractor>
+    </target>
+
+    <target name="get.results" depends="get.dependencies">
+       <java classname="edu.carleton.tim.jdsm.test.RunAllTests" fork="true">
+           <jvmarg value="-Xms512m"/>
+           <jvmarg value="-Xmx1024m"/>
+       	<arg value="../results/dependencies.xml"/>	
+       	<arg value="${package.filter}"/>	
+       	<arg value="${bus.treshold}"/>	
+       	<arg value="${results.folder}"/>	
+       	<arg value="${lib.path}"/>	
+       	<classpath refid="path"/>
+       </java>
+   </target>
+
+    <target name="clean.results">
+		<mkdir dir="${results.folder}"/>
+    	<delete dir="${results.folder}"/>
+		<mkdir dir="${results.folder}"/>
+    </target>
+	
+    <target name="clen.dist">
+   		<mkdir dir="../dist/classes"/>
+   		<delete dir="../dist/classes"/>
+		<mkdir dir="../dist/classes"/>
+    </target>
+
+	
+	<target name="dist" depends="clen.dist">
+		<javac srcdir="../src" destdir="../dist/classes" target="5">
+			<classpath refid="path"/>
+		</javac>   	
+   		<jar destfile="../dist/jdsm.jar" basedir="../dist/classes"/>
+        <javadoc access="public" author="true" destdir="../dist/api" doctitle="jDSM - Java DSM library" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="edu.carleton.tim.jdsm.dependency,edu.carleton.tim.jdsm.dependency.analysis,edu.carleton.tim.jdsm,edu.carleton.tim.jdsm.dependency.provider" source="1.5" sourcepath="../src" splitindex="true" use="true" version="true">
+			<classpath refid="path"/>
+            <link href="http://jscience.org/api"/>
+        </javadoc>
+    </target>
+
+</project>
