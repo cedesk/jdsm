@@ -34,13 +34,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package edu.carleton.tim.jdsm;
 
+import javolution.xml.stream.XMLStreamException;
+import org.jscience.mathematics.structure.Field;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
-
-import javolution.xml.stream.XMLStreamException;
-
-import org.jscience.mathematics.structure.Field;
 
 /**
  * Theis interface is a representation of a Design Structure Matrix (DSM).<br>
@@ -52,104 +51,94 @@ import org.jscience.mathematics.structure.Field;
  * DSM only provides indications of existence of dependencies, but the cells can
  * also be populated with numeric measure to indicate the degree of the
  * dependencies.
- * 
+ *
  * @author Roberto Milev
  */
-public interface DesignStructureMatrix<F extends Field<F>>{
+public interface DesignStructureMatrix<F extends Field<F>> {
 
-	/**
-	 * Gets the cluster end position mappings.
-	 * 
-	 * @return the cluster end position mappings
-	 */
-	public abstract Map<String, Integer> getClusterEndPositionMappings();
+    /**
+     * Gets the cluster end position mappings.
+     *
+     * @return the cluster end position mappings
+     */
+    public abstract Map<String, Integer> getClusterEndPositionMappings();
 
-	/**
-	 * Gets the cluster start position mappings.
-	 * 
-	 * @return the cluster start position mappings
-	 */
-	public abstract Map<String, Integer> getClusterStartPositionMappings();
+    /**
+     * Gets the cluster start position mappings.
+     *
+     * @return the cluster start position mappings
+     */
+    public abstract Map<String, Integer> getClusterStartPositionMappings();
 
-	/**
-	 * Gets the name position mappings.
-	 * 
-	 * @return the name position mappings
-	 */
-	public abstract Map<String, Integer> getNamePositionMappings();
+    /**
+     * Gets the name position mappings.
+     *
+     * @return the name position mappings
+     */
+    public abstract Map<String, Integer> getNamePositionMappings();
 
-	/**
-	 * Gets the position name mappings.
-	 * 
-	 * @return the position name mappings
-	 */
-	public abstract Map<Integer, String> getPositionNameMappings();
+    /**
+     * Gets the position name mappings.
+     *
+     * @return the position name mappings
+     */
+    public abstract Map<Integer, String> getPositionNameMappings();
 
-	/**
-	 * Gets the map.
-	 * 
-	 * @return the map
-	 */
-	public abstract F[][] getMap();
+    /**
+     * Gets the map.
+     *
+     * @return the map
+     */
+    public abstract F[][] getMap();
 
-	/**
-	 * Pretty print.
-	 */
-	public abstract void prettyPrint();
+    /**
+     * Pretty print.
+     */
+    public abstract void prettyPrint();
 
-	/**
-	 * Reset clusters.
-	 */
-	public abstract void resetClusters();
+    /**
+     * Reset clusters.
+     */
+    public abstract void resetClusters();
 
-	/**
-	 * Shift.
-	 * 
-	 * @param from
-	 *            the from
-	 * @param to
-	 *            the to
-	 */
-	public abstract void shift(int from, int to);
+    /**
+     * Shift.
+     *
+     * @param from the from
+     * @param to   the to
+     */
+    public abstract void shift(int from, int to);
 
-	/**
-	 * Swap.
-	 * 
-	 * @param from
-	 *            the from
-	 * @param to
-	 *            the to
-	 */
-	public abstract void swap(int from, int to);
+    /**
+     * Swap.
+     *
+     * @param from the from
+     * @param to   the to
+     */
+    public abstract void swap(int from, int to);
 
-	/**
-	 * Clone.
-	 * 
-	 * @return the design structure matrix< f>
-	 */
-	public DesignStructureMatrix<F> clone();
-	
-	/**
-	 * Serializes the object to XML format.
-	 * 
-	 * @param outputStream
-	 *            stream to write XML to
-	 * 
-	 * @throws XMLStreamException
-	 *             the XML stream exception
-	 */
-	public void saveToXml(OutputStream outputStream) throws XMLStreamException;
+    /**
+     * Clone.
+     *
+     * @return the design structure matrix< f>
+     */
+    public DesignStructureMatrix<F> clone();
 
-	/**
-	 * Deserializes the object from XML format.
-	 * 
-	 * @param outputStream
-	 *            stream to read XML from
-	 * 
-	 * @throws XMLStreamException
-	 *             the XML stream exception
-	 */
-	public void loadFromXml(InputStream outputStream) throws XMLStreamException;
+    /**
+     * Serializes the object to XML format.
+     *
+     * @param outputStream stream to write XML to
+     * @throws XMLStreamException the XML stream exception
+     */
+    public void saveToXml(OutputStream outputStream) throws XMLStreamException;
+
+    /**
+     * Deserializes the object from XML format.
+     *
+     * @param outputStream stream to read XML from
+     * @throws XMLStreamException the XML stream exception
+     */
+    public void loadFromXml(InputStream outputStream) throws XMLStreamException;
 
 
 }

@@ -34,67 +34,65 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package edu.carleton.tim.jdsm.dependency.analysis;
 
+import edu.carleton.tim.jdsm.DesignStructureMatrix;
+import edu.carleton.tim.jdsm.dependency.Dependency;
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.log4j.Logger;
-
-import edu.carleton.tim.jdsm.DesignStructureMatrix;
-import edu.carleton.tim.jdsm.dependency.Dependency;
 
 /**
  * The Class ChangeRatio. The metric indicates level of change between two DSMs
  * representing a system in different points in time. <br>
  * The value us calculated as: <br>
  * <code>(newElementsCount + removedElementsCount) / (totalBeforeCount)</code>
- * 
+ *
  * @author Roberto Milev
  */
 public class ChangeRatio {
 
-	/** The logger. */
-	private static Logger logger = Logger.getLogger(ChangeRatio.class);
+    /**
+     * The logger.
+     */
+    private static Logger logger = Logger.getLogger(ChangeRatio.class);
 
-	/**
-	 * Computes the change ratio.
-	 * 
-	 * @param dsm1
-	 *            the initial version of the DSM
-	 * @param dsm2
-	 *            the second version of the DSM
-	 * 
-	 * @return the change ratio
-	 */
-	public static double computeChangeRatio(DesignStructureMatrix<Dependency> dsm1,
-			DesignStructureMatrix<Dependency> dsm2) {
+    /**
+     * Computes the change ratio.
+     *
+     * @param dsm1 the initial version of the DSM
+     * @param dsm2 the second version of the DSM
+     * @return the change ratio
+     */
+    public static double computeChangeRatio(DesignStructureMatrix<Dependency> dsm1,
+                                            DesignStructureMatrix<Dependency> dsm2) {
 
-		logger.info("Started computing change ratio.");
-		List<String> removedElements = new ArrayList<String>(dsm1
-				.getNamePositionMappings().keySet());
-		List<String> addedElements = new ArrayList<String>(dsm2
-				.getNamePositionMappings().keySet());
-		float totalBeforeCount = addedElements.size();
-		{
-			Collections.sort(removedElements);
-			Collections.sort(addedElements);
+        logger.info("Started computing change ratio.");
+        List<String> removedElements = new ArrayList<String>(dsm1
+                .getNamePositionMappings().keySet());
+        List<String> addedElements = new ArrayList<String>(dsm2
+                .getNamePositionMappings().keySet());
+        float totalBeforeCount = addedElements.size();
+        {
+            Collections.sort(removedElements);
+            Collections.sort(addedElements);
 
-			for (int i = 0; i < addedElements.size(); i++) {
-				String className = addedElements.get(i);
-				if (removedElements.contains(className)) {
-					removedElements.remove(className);
-					addedElements.remove(className);
-				}
-			}
+            for (int i = 0; i < addedElements.size(); i++) {
+                String className = addedElements.get(i);
+                if (removedElements.contains(className)) {
+                    removedElements.remove(className);
+                    addedElements.remove(className);
+                }
+            }
 
-			float newElementsCount = addedElements.size();
-			float removedElementsCount = removedElements.size();
+            float newElementsCount = addedElements.size();
+            float removedElementsCount = removedElements.size();
 
-			double changeRatio =(newElementsCount + removedElementsCount) / (totalBeforeCount); 
-			
-			logger.info("Computed change ratio: "+changeRatio);
-			logger.info("Started computing change ratio.");
-			return changeRatio;
-		}
-	}
+            double changeRatio = (newElementsCount + removedElementsCount) / (totalBeforeCount);
+
+            logger.info("Computed change ratio: " + changeRatio);
+            logger.info("Started computing change ratio.");
+            return changeRatio;
+        }
+    }
 }

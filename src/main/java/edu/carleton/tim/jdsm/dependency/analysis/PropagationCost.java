@@ -34,83 +34,82 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package edu.carleton.tim.jdsm.dependency.analysis;
 
+import edu.carleton.tim.jdsm.DesignStructureMatrix;
+import edu.carleton.tim.jdsm.dependency.Dependency;
 import org.apache.log4j.Logger;
 import org.jscience.mathematics.number.Rational;
 import org.jscience.mathematics.vector.DenseMatrix;
 import org.jscience.mathematics.vector.Matrix;
 
-import edu.carleton.tim.jdsm.DesignStructureMatrix;
-import edu.carleton.tim.jdsm.dependency.Dependency;
-
 
 /**
  * The Class PropagationCost. This is a metric that indicates the level of
  * impact that a change in one element in the system has on the overall system.
- * 
+ *
  * @author Roberto Milev
  */
 public class PropagationCost {
 
-	/** The logger. */
-	private static Logger logger = Logger.getLogger(PropagationCost.class);
+    /**
+     * The logger.
+     */
+    private static Logger logger = Logger.getLogger(PropagationCost.class);
 
-	/**
-	 * Compute propagation cost.
-	 * 
-	 * @param dsm
-	 *            the DSM to be analyzed
-	 * 
-	 * @return the propagation cost. A value between 0 and 1 indicating the
-	 *         impact in percents
-	 */
-	public static double computePropagationCost(DesignStructureMatrix<Dependency> dsm) {
-		DesignStructureMatrix<Dependency> dsmCopy = dsm.clone();
-		logger.info("Started computing propagation cost.");
-		final int mapSize = dsmCopy.getMap().length;
-		Matrix<Dependency> matrix = DenseMatrix.valueOf(dsmCopy.getMap());
+    /**
+     * Compute propagation cost.
+     *
+     * @param dsm the DSM to be analyzed
+     * @return the propagation cost. A value between 0 and 1 indicating the
+     * impact in percents
+     */
+    public static double computePropagationCost(DesignStructureMatrix<Dependency> dsm) {
+        DesignStructureMatrix<Dependency> dsmCopy = dsm.clone();
+        logger.info("Started computing propagation cost.");
+        final int mapSize = dsmCopy.getMap().length;
+        Matrix<Dependency> matrix = DenseMatrix.valueOf(dsmCopy.getMap());
 
-		Dependency[][] zeroDep = new Dependency[matrix.getNumberOfColumns()]
-		                                        [matrix.getNumberOfRows()];
-		Dependency[][] singleDep = new Dependency[matrix.getNumberOfColumns()]
-		                                          [matrix.getNumberOfRows()];
+        Dependency[][] zeroDep = new Dependency[matrix.getNumberOfColumns()]
+                [matrix.getNumberOfRows()];
+        Dependency[][] singleDep = new Dependency[matrix.getNumberOfColumns()]
+                [matrix.getNumberOfRows()];
 
-		for (int i = 0; i < matrix.getNumberOfRows(); i++) {
-			for (int j = 0; j < matrix.getNumberOfRows(); j++) {
-				if (i == j) {
-					singleDep[i][j] = Dependency.YES;
-				} else {
-					singleDep[i][j] = Dependency.NO;
-				}
-				zeroDep[i][j] = Dependency.NO;
+        for (int i = 0; i < matrix.getNumberOfRows(); i++) {
+            for (int j = 0; j < matrix.getNumberOfRows(); j++) {
+                if (i == j) {
+                    singleDep[i][j] = Dependency.YES;
+                } else {
+                    singleDep[i][j] = Dependency.NO;
+                }
+                zeroDep[i][j] = Dependency.NO;
 
-			}
-		}
+            }
+        }
 
-		Matrix<Dependency> zeroMatrix = DenseMatrix.valueOf(zeroDep);
-		Matrix<Dependency> sumMatrix = DenseMatrix.valueOf(singleDep);
-		Matrix<Dependency> powerMatrix = DenseMatrix.valueOf(singleDep);
+        Matrix<Dependency> zeroMatrix = DenseMatrix.valueOf(zeroDep);
+        Matrix<Dependency> sumMatrix = DenseMatrix.valueOf(singleDep);
+        Matrix<Dependency> powerMatrix = DenseMatrix.valueOf(singleDep);
 
-		int counter = 0;
-		while (counter < mapSize && !powerMatrix.equals(zeroMatrix)) {
-			counter++;
-			if (counter % 50 == 0) {
-				logger.info("Processed " + counter + " of " + mapSize);
-			}
-			powerMatrix = powerMatrix.times(matrix);
-			sumMatrix = sumMatrix.plus(powerMatrix);
-		}
+        int counter = 0;
+        while (counter < mapSize && !powerMatrix.equals(zeroMatrix)) {
+            counter++;
+            if (counter % 50 == 0) {
+                logger.info("Processed " + counter + " of " + mapSize);
+            }
+            powerMatrix = powerMatrix.times(matrix);
+            sumMatrix = sumMatrix.plus(powerMatrix);
+        }
 
-		long totalDeps = 0;
-		for (int i = 0; i < mapSize; i++) {
-			for (int j = 0; j < mapSize; j++) {
-				if ((sumMatrix.get(i, j)).booleanValue()) {
-					totalDeps++;
-				}
-			}
-		}
+        long totalDeps = 0;
+        for (int i = 0; i < mapSize; i++) {
+            for (int j = 0; j < mapSize; j++) {
+                if ((sumMatrix.get(i, j)).booleanValue()) {
+                    totalDeps++;
+                }
+            }
+        }
 
-		double propagationCost = Rational.valueOf(totalDeps, mapSize * mapSize).doubleValue();
-		logger.info("Computed propagation cost: "+propagationCost);
-		return propagationCost;
-	}
+        double propagationCost = Rational.valueOf(totalDeps, mapSize * mapSize).doubleValue();
+        logger.info("Computed propagation cost: " + propagationCost);
+        return propagationCost;
+    }
 }

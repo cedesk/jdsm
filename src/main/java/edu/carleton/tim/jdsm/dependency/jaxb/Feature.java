@@ -1,22 +1,17 @@
 package edu.carleton.tim.jdsm.dependency.jaxb;
 
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>
  * Java class for anonymous complex type.
- * 
+ * <p>
  * <p>
  * The following schema fragment specifies the expected content contained within
  * this class.
- * 
+ * <p>
  * <pre>
  * &lt;complexType&gt;
  * &lt;complexContent&gt;
@@ -32,95 +27,101 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "name", "outbound", "inbound" })
+@XmlType(name = "", propOrder = {"name", "outbound", "inbound"})
 @XmlRootElement(name = "feature")
 public class Feature {
 
-	/** The inbound. */
-	protected List<Inbound> inbound;
-	
-	/** The name. */
-	@XmlElement(required = true)
-	protected String name;
-	
-	/** The outbound. */
-	protected List<Outbound> outbound;
+    /**
+     * The inbound.
+     */
+    protected List<Inbound> inbound;
 
-	/**
-	 * Gets the value of the inbound property.
-	 * 
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a
-	 * snapshot. Therefore any modification you make to the returned list will
-	 * be present inside the JAXB object. This is why there is not a
-	 * <CODE>set</CODE> method for the inbound property.
-	 * 
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getInbound().add(newItem);
-	 * </pre>
-	 * 
-	 * 
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link Inbound }
-	 * 
-	 * @return the inbound
-	 */
-	public List<Inbound> getInbound() {
-		if (inbound == null) {
-			inbound = new ArrayList<Inbound>();
-		}
-		return inbound;
-	}
+    /**
+     * The name.
+     */
+    @XmlElement(required = true)
+    protected String name;
 
-	/**
-	 * Gets the value of the name property.
-	 * 
-	 * @return possible object is {@link String }
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * The outbound.
+     */
+    protected List<Outbound> outbound;
 
-	/**
-	 * Gets the value of the outbound property.
-	 * 
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a
-	 * snapshot. Therefore any modification you make to the returned list will
-	 * be present inside the JAXB object. This is why there is not a
-	 * <CODE>set</CODE> method for the outbound property.
-	 * 
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getOutbound().add(newItem);
-	 * </pre>
-	 * 
-	 * 
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list
-	 * {@link Outbound }
-	 * 
-	 * @return the outbound
-	 */
-	public List<Outbound> getOutbound() {
-		if (outbound == null) {
-			outbound = new ArrayList<Outbound>();
-		}
-		return outbound;
-	}
+    /**
+     * Gets the value of the inbound property.
+     * <p>
+     * <p>
+     * This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the inbound property.
+     * <p>
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <p>
+     * <pre>
+     * getInbound().add(newItem);
+     * </pre>
+     * <p>
+     * <p>
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link Inbound }
+     *
+     * @return the inbound
+     */
+    public List<Inbound> getInbound() {
+        if (inbound == null) {
+            inbound = new ArrayList<Inbound>();
+        }
+        return inbound;
+    }
 
-	/**
-	 * Sets the value of the name property.
-	 * 
-	 * @param value allowed object is {@link String }
-	 */
-	public void setName(String value) {
-		name = value;
-	}
+    /**
+     * Gets the value of the name property.
+     *
+     * @return possible object is {@link String }
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the value of the outbound property.
+     * <p>
+     * <p>
+     * This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the outbound property.
+     * <p>
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <p>
+     * <pre>
+     * getOutbound().add(newItem);
+     * </pre>
+     * <p>
+     * <p>
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Outbound }
+     *
+     * @return the outbound
+     */
+    public List<Outbound> getOutbound() {
+        if (outbound == null) {
+            outbound = new ArrayList<Outbound>();
+        }
+        return outbound;
+    }
+
+    /**
+     * Sets the value of the name property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    public void setName(String value) {
+        name = value;
+    }
 
 }

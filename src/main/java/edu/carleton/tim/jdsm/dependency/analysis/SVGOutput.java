@@ -34,117 +34,106 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package edu.carleton.tim.jdsm.dependency.analysis;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
-
-import org.apache.log4j.Logger;
-
 import edu.carleton.tim.jdsm.DesignStructureMatrix;
 import edu.carleton.tim.jdsm.dependency.Dependency;
+import org.apache.log4j.Logger;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 
 /**
  * The Class SVGOutput. Prints the DSM to a Scalable Vector Graphic (SVG)
  * format.
- * 
+ *
  * @author Roberto Milev
  */
 public class SVGOutput {
 
-	/** The logger. */
-	private static Logger logger = Logger.getLogger(SVGOutput.class);
+    /**
+     * The logger.
+     */
+    private static Logger logger = Logger.getLogger(SVGOutput.class);
 
-	/**
-	 * Prints the DSM to a Scalable Vector Graphic (SVG) format.
-	 * 
-	 * @param dsm
-	 *            the DSM
-	 * @param outputStream
-	 *            the output stream to print to
-	 */
-	public static void printDsm(DesignStructureMatrix<Dependency> dsm, OutputStream outputStream) {
-		PrintStream outStream = new PrintStream(outputStream);
-		printHeader(outStream, dsm.getMap().length, dsm.getMap().length);
+    /**
+     * Prints the DSM to a Scalable Vector Graphic (SVG) format.
+     *
+     * @param dsm          the DSM
+     * @param outputStream the output stream to print to
+     */
+    public static void printDsm(DesignStructureMatrix<Dependency> dsm, OutputStream outputStream) {
+        PrintStream outStream = new PrintStream(outputStream);
+        printHeader(outStream, dsm.getMap().length, dsm.getMap().length);
 
-		for (String currentPackage : dsm.getClusterStartPositionMappings().keySet()) {
+        for (String currentPackage : dsm.getClusterStartPositionMappings().keySet()) {
 
-			printRectangle(outStream,
-					dsm.getClusterStartPositionMappings().get(currentPackage),
-					dsm.getClusterStartPositionMappings().get(currentPackage),
-					dsm.getClusterEndPositionMappings().get(currentPackage)
-							- dsm.getClusterStartPositionMappings().get(currentPackage),
-					dsm	.getClusterEndPositionMappings().get(currentPackage)
-							- dsm.getClusterStartPositionMappings().get(currentPackage));
-		}
+            printRectangle(outStream,
+                    dsm.getClusterStartPositionMappings().get(currentPackage),
+                    dsm.getClusterStartPositionMappings().get(currentPackage),
+                    dsm.getClusterEndPositionMappings().get(currentPackage)
+                            - dsm.getClusterStartPositionMappings().get(currentPackage),
+                    dsm.getClusterEndPositionMappings().get(currentPackage)
+                            - dsm.getClusterStartPositionMappings().get(currentPackage));
+        }
 
-		for (int i = 0; i < dsm.getMap().length; i++) {
-			for (int j = 0; j < dsm.getMap().length; j++) {
-				if (dsm.getMap()[i][j].booleanValue()) {
-					printRectangle(outStream, i, j, 1, 1);
-				}
-			}
-		}
+        for (int i = 0; i < dsm.getMap().length; i++) {
+            for (int j = 0; j < dsm.getMap().length; j++) {
+                if (dsm.getMap()[i][j].booleanValue()) {
+                    printRectangle(outStream, i, j, 1, 1);
+                }
+            }
+        }
 
-		printFooter(outStream);
-		outStream.close();
-		logger.info("Finshed printing DSM to SVG.");
-	}
+        printFooter(outStream);
+        outStream.close();
+        logger.info("Finshed printing DSM to SVG.");
+    }
 
-	/**
-	 * Prints the footer.
-	 * 
-	 * @param printStream
-	 *            the print stream
-	 */
-	private static void printFooter(PrintStream printStream) {
-		printStream.println("</g>");
-		printStream.println("</svg>");
-	}
+    /**
+     * Prints the footer.
+     *
+     * @param printStream the print stream
+     */
+    private static void printFooter(PrintStream printStream) {
+        printStream.println("</g>");
+        printStream.println("</svg>");
+    }
 
-	/**
-	 * Prints the header.
-	 * 
-	 * @param printStream
-	 *            the print stream
-	 * @param width
-	 *            the width
-	 * @param height
-	 *            the height
-	 */
-	private static void printHeader(PrintStream printStream, int width, int height) {
-		printStream.println("<?xml version=\"1.0\" standalone=\"no\"?>");
-		printStream.println("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" " +
-							"\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
-		printStream.println("<svg " +
-									"width=\"" + width + "px\" " +
-									"height=\"" + height	+ "px\" " +
-									"version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">");
-		printStream.println("<g fill=\"none\" stroke=\"black\" stroke-width=\"0.25\" >");
-	}
+    /**
+     * Prints the header.
+     *
+     * @param printStream the print stream
+     * @param width       the width
+     * @param height      the height
+     */
+    private static void printHeader(PrintStream printStream, int width, int height) {
+        printStream.println("<?xml version=\"1.0\" standalone=\"no\"?>");
+        printStream.println("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" " +
+                "\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
+        printStream.println("<svg " +
+                "width=\"" + width + "px\" " +
+                "height=\"" + height + "px\" " +
+                "version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">");
+        printStream.println("<g fill=\"none\" stroke=\"black\" stroke-width=\"0.25\" >");
+    }
 
-	/**
-	 * Prints the rectangle.
-	 * 
-	 * @param printStream
-	 *            the print stream
-	 * @param x
-	 *            the x
-	 * @param y
-	 *            the y
-	 * @param width
-	 *            the width
-	 * @param height
-	 *            the height
-	 */
-	private static void printRectangle(PrintStream printStream, int x, int y,
-			int width, int height) {
-		// coordinates in SVG are inverse from the matrix coordinates
-		printStream.println("    <rect width=\"" + width + "\"  " +
-										"height=\"" + height + "\" " +
-										"x=\"" + y + "\" " +
-										"y=\"" + x + "\" " +
-										(width == 1 && height == 1 ? " fill=\"black\" " : "") + "/>");
+    /**
+     * Prints the rectangle.
+     *
+     * @param printStream the print stream
+     * @param x           the x
+     * @param y           the y
+     * @param width       the width
+     * @param height      the height
+     */
+    private static void printRectangle(PrintStream printStream, int x, int y,
+                                       int width, int height) {
+        // coordinates in SVG are inverse from the matrix coordinates
+        printStream.println("    <rect width=\"" + width + "\"  " +
+                "height=\"" + height + "\" " +
+                "x=\"" + y + "\" " +
+                "y=\"" + x + "\" " +
+                (width == 1 && height == 1 ? " fill=\"black\" " : "") + "/>");
 
-	}
+    }
 }

@@ -34,19 +34,17 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package edu.carleton.tim.jdsm.dependency;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
-
+import edu.carleton.tim.jdsm.DesignStructureMatrix;
 import javolution.xml.XMLFormat;
 import javolution.xml.XMLObjectReader;
 import javolution.xml.XMLObjectWriter;
 import javolution.xml.stream.XMLStreamException;
-
 import org.apache.log4j.Logger;
 
-import edu.carleton.tim.jdsm.DesignStructureMatrix;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -57,252 +55,262 @@ import edu.carleton.tim.jdsm.DesignStructureMatrix;
  * dependencies between the elements . A value of {@link Dependency#YES} in the
  * cell at row i and column j means that the element at position i depends on
  * the element at position j.
- * 
+ *
  * @author Roberto Milev
  */
 public class DependencyDSM implements DesignStructureMatrix<Dependency> {
-	
-	/** The logger. */
-	private static Logger logger = Logger.getLogger(DependencyDSM.class);
 
-	/** The cluster end position mappings. */
-	protected Map<String, Integer> clusterEndPositionMappings = new HashMap<String, Integer>();
-	
-	/** The cluster start position mappings. */
-	protected Map<String, Integer> clusterStartPositionMappings = new HashMap<String, Integer>();
-	
-	/** The name position mappings. */
-	protected Map<String, Integer> namePositionMappings = new HashMap<String, Integer>();
-	
-	/** The position name mappings. */
-	protected Map<Integer, String> positionNameMappings = new HashMap<Integer, String>();
-	
-	/** The map. */
-	protected Dependency[][] map;
+    /**
+     * The logger.
+     */
+    private static Logger logger = Logger.getLogger(DependencyDSM.class);
 
-	
-	/**
-	 * Instantiates a new dependency dsm.
-	 */
-	public DependencyDSM() {
-		super();
-	}
+    /**
+     * The cluster end position mappings.
+     */
+    protected Map<String, Integer> clusterEndPositionMappings = new HashMap<String, Integer>();
 
-	/**
-	 * Instantiates a new dependency dsm.
-	 * 
-	 * @param _cluster_end_position_mappings
-	 *            the _cluster_end_position_mappings
-	 * @param _cluster_start_position_mappings
-	 *            the _cluster_start_position_mappings
-	 * @param _name_position_mappings
-	 *            the _name_position_mappings
-	 * @param _position_name_mappings
-	 *            the _position_name_mappings
-	 * @param map
-	 *            the map
-	 */
-	public DependencyDSM(
-			Map<String, Integer> _cluster_end_position_mappings,
-			Map<String, Integer> _cluster_start_position_mappings,
-			Map<String, Integer> _name_position_mappings,
-			Map<Integer, String> _position_name_mappings,
-			Dependency[][] map) {
-		this.clusterEndPositionMappings = _cluster_end_position_mappings;
-		this.clusterStartPositionMappings = _cluster_start_position_mappings;
-		this.namePositionMappings = _name_position_mappings;
-		this.positionNameMappings = _position_name_mappings;
-		this.map = map;
-	}
+    /**
+     * The cluster start position mappings.
+     */
+    protected Map<String, Integer> clusterStartPositionMappings = new HashMap<String, Integer>();
 
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.jdsm.DesignStructureMatrix#getClusterEndPositionMappings()
-	 */
-	public Map<String, Integer> getClusterEndPositionMappings() {
-		return clusterEndPositionMappings;
-	}
+    /**
+     * The name position mappings.
+     */
+    protected Map<String, Integer> namePositionMappings = new HashMap<String, Integer>();
 
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.jdsm.DesignStructureMatrix#getClusterStartPositionMappings()
-	 */
-	public Map<String, Integer> getClusterStartPositionMappings() {
-		return clusterStartPositionMappings;
-	}
+    /**
+     * The position name mappings.
+     */
+    protected Map<Integer, String> positionNameMappings = new HashMap<Integer, String>();
 
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.jdsm.DesignStructureMatrix#getNamePositionMappings()
-	 */
-	public Map<String, Integer> getNamePositionMappings() {
-		return namePositionMappings;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.jdsm.DesignStructureMatrix#getPositionNameMappings()
-	 */
-	public Map<Integer, String> getPositionNameMappings() {
-		return positionNameMappings;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.dsm.DesignStructureMatrix#getMap()
-	 */
-	public Dependency[][] getMap() {
-		return map;
-	}
+    /**
+     * The map.
+     */
+    protected Dependency[][] map;
 
 
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.dsm.DesignStructureMatrix#prettyPrint()
-	 */
-	public void prettyPrint(){
-		for(int i=0; i<map.length; i++){
-			for(int j=0; j< map.length; j++){
-				System.out.print("\t"+map[i][j]);
-			}
-			System.out.println("");
-		}
-	}
+    /**
+     * Instantiates a new dependency dsm.
+     */
+    public DependencyDSM() {
+        super();
+    }
 
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.dsm.DesignStructureMatrix#resetClusters()
-	 */
-	public void resetClusters(){
-		this.clusterStartPositionMappings = new HashMap<String, Integer>();
-		this.clusterEndPositionMappings = new HashMap<String, Integer>();
-	}
+    /**
+     * Instantiates a new dependency dsm.
+     *
+     * @param _cluster_end_position_mappings   the _cluster_end_position_mappings
+     * @param _cluster_start_position_mappings the _cluster_start_position_mappings
+     * @param _name_position_mappings          the _name_position_mappings
+     * @param _position_name_mappings          the _position_name_mappings
+     * @param map                              the map
+     */
+    public DependencyDSM(
+            Map<String, Integer> _cluster_end_position_mappings,
+            Map<String, Integer> _cluster_start_position_mappings,
+            Map<String, Integer> _name_position_mappings,
+            Map<Integer, String> _position_name_mappings,
+            Dependency[][] map) {
+        this.clusterEndPositionMappings = _cluster_end_position_mappings;
+        this.clusterStartPositionMappings = _cluster_start_position_mappings;
+        this.namePositionMappings = _name_position_mappings;
+        this.positionNameMappings = _position_name_mappings;
+        this.map = map;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.jdsm.DesignStructureMatrix#getClusterEndPositionMappings()
+     */
+    public Map<String, Integer> getClusterEndPositionMappings() {
+        return clusterEndPositionMappings;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.jdsm.DesignStructureMatrix#getClusterStartPositionMappings()
+     */
+    public Map<String, Integer> getClusterStartPositionMappings() {
+        return clusterStartPositionMappings;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.jdsm.DesignStructureMatrix#getNamePositionMappings()
+     */
+    public Map<String, Integer> getNamePositionMappings() {
+        return namePositionMappings;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.jdsm.DesignStructureMatrix#getPositionNameMappings()
+     */
+    public Map<Integer, String> getPositionNameMappings() {
+        return positionNameMappings;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.dsm.DesignStructureMatrix#getMap()
+     */
+    public Dependency[][] getMap() {
+        return map;
+    }
 
 
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.dsm.DesignStructureMatrix#shift(int, int)
-	 */
-	public void shift(int from, int to) {
-		if (from < to) {
-			for (int i = 0; i < to - from; i++) {
-				swap(from + i, from + i + 1);
-			}
-		} else {
-			for (int i = 0; i < from - to; i++) {
-				swap(from - i, from - i - 1);
-			}
-		}
-	}
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.dsm.DesignStructureMatrix#prettyPrint()
+     */
+    public void prettyPrint() {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                System.out.print("\t" + map[i][j]);
+            }
+            System.out.println("");
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.dsm.DesignStructureMatrix#swap(int, int)
-	 */
-	public void swap(int from, int to) {
-		Dependency temp;
-		for (int i = 0; i < map.length; i++) {
-			temp = map[from][i];
-			map[from][i] = map[to][i];
-			map[to][i] = temp;
-		}
-		for (int i = 0; i < map.length; i++) {
-			temp = map[i][from];
-			map[i][from] = map[i][to];
-			map[i][to] = temp;
-		}
-		
-		String fromName = positionNameMappings.get(from);
-		String toName = positionNameMappings.get(to);
-		
-		positionNameMappings.put(from, toName);
-		positionNameMappings.put(to, fromName);
-		namePositionMappings.put(fromName, to);
-		namePositionMappings.put(toName, from);
-	}
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.dsm.DesignStructureMatrix#resetClusters()
+     */
+    public void resetClusters() {
+        this.clusterStartPositionMappings = new HashMap<String, Integer>();
+        this.clusterEndPositionMappings = new HashMap<String, Integer>();
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#clone()
-	 */
-	public DesignStructureMatrix<Dependency> clone(){
-		Map<String, Integer> _cluster_end_position_mappings = new HashMap<String, Integer>();
-		Map<String, Integer> _cluster_start_position_mappings = new HashMap<String, Integer>();
-		Map<String, Integer> _name_position_mappings = new HashMap<String, Integer>();
-		Map<Integer, String> _position_name_mappings = new HashMap<Integer, String>();
-		Dependency[][] map = new Dependency[this.map.length][this.map.length];
-		
-		for(String key: this.clusterEndPositionMappings.keySet()){
-			_cluster_end_position_mappings.put(new String(key), new Integer(this.clusterEndPositionMappings.get(key)));
-		}
-		for(String key: this.clusterStartPositionMappings.keySet()){
-			_cluster_start_position_mappings.put(new String(key), new Integer(this.clusterStartPositionMappings.get(key)));
-		}
-		for(String key: this.namePositionMappings.keySet()){
-			_name_position_mappings.put(new String(key), new Integer(this.namePositionMappings.get(key)));
-		}
-		for(Integer key: this.positionNameMappings.keySet()){
-			_position_name_mappings.put(new Integer(key), new String(this.positionNameMappings.get(key)));
-		}
-		for(int i = 0; i < map.length; i++){
-			for(int j = 0; j < map.length; j++){
-				map[i][j] = this.map[i][j];
-			}
-		}
-		return new DependencyDSM(_cluster_end_position_mappings, _cluster_start_position_mappings, _name_position_mappings, _position_name_mappings, map);
-	}
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.jdsm.DesignStructureMatrix#saveToXml(java.io.OutputStream)
-	 */
-	public void saveToXml(OutputStream outputStream) throws XMLStreamException {
-		XMLObjectWriter writer = XMLObjectWriter.newInstance(outputStream);
-		writer.setIndentation("\t");
-		writer.write(this, this.getClass().getCanonicalName(), DependencyDSM.class);
-		writer.close();
-		logger.info("Saved DSM to XML");
-	}
 
-	/* (non-Javadoc)
-	 * @see edu.carleton.tim.jdsm.DesignStructureMatrix#loadFromXml(java.io.InputStream)
-	 */
-	public void loadFromXml(InputStream outputStream) throws XMLStreamException {
-		XMLObjectReader reader = XMLObjectReader.newInstance(outputStream);
-		DependencyDSM dsm = reader.read(this.getClass().getCanonicalName(), DependencyDSM.class);
-		reader.close();
-		clusterEndPositionMappings = dsm.clusterEndPositionMappings;
-		clusterStartPositionMappings = dsm.clusterStartPositionMappings;
-		namePositionMappings = dsm.namePositionMappings;
-		positionNameMappings = dsm.positionNameMappings;
-		map = dsm.map;
-		logger.info("Loaded DSM from XML");
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString(){
-		String result = new String("\n");
-		for(int i = 0; i < map.length; i++){
-			for(int j = 0; j < map.length; j++){
-				result+=map[i][j]+"\t";
-			}
-			result+="\n";
-		}
-		return result;
-	}
-	
-	/** The Constant XML. */
-	protected static final XMLFormat<DependencyDSM> XML = new XMLFormat<DependencyDSM>(DependencyDSM.class) {
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.dsm.DesignStructureMatrix#shift(int, int)
+     */
+    public void shift(int from, int to) {
+        if (from < to) {
+            for (int i = 0; i < to - from; i++) {
+                swap(from + i, from + i + 1);
+            }
+        } else {
+            for (int i = 0; i < from - to; i++) {
+                swap(from - i, from - i - 1);
+            }
+        }
+    }
 
-		@Override
-		public void read(InputElement xml, DependencyDSM dsm)
-				throws XMLStreamException {
-			dsm.clusterEndPositionMappings = xml.get("clusterEndPositionMappings");
-			dsm.clusterStartPositionMappings = xml.get("clusterStartPositionMappings");
-			dsm.namePositionMappings = xml.get("namePositionMappings");
-			dsm.positionNameMappings = xml.get("positionNameMappings");
-			dsm.map = xml.get("map");
-		}
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.dsm.DesignStructureMatrix#swap(int, int)
+     */
+    public void swap(int from, int to) {
+        Dependency temp;
+        for (int i = 0; i < map.length; i++) {
+            temp = map[from][i];
+            map[from][i] = map[to][i];
+            map[to][i] = temp;
+        }
+        for (int i = 0; i < map.length; i++) {
+            temp = map[i][from];
+            map[i][from] = map[i][to];
+            map[i][to] = temp;
+        }
 
-		@Override
-		public void write(DependencyDSM dsm, OutputElement xml)
-				throws XMLStreamException {
-			xml.add(dsm.clusterEndPositionMappings,	"clusterEndPositionMappings");
-			xml.add(dsm.clusterStartPositionMappings, "clusterStartPositionMappings");
-			xml.add(dsm.namePositionMappings, "namePositionMappings");
-			xml.add(dsm.positionNameMappings, "positionNameMappings");
-			xml.add(dsm.map, "map");
-		}
-	};
+        String fromName = positionNameMappings.get(from);
+        String toName = positionNameMappings.get(to);
+
+        positionNameMappings.put(from, toName);
+        positionNameMappings.put(to, fromName);
+        namePositionMappings.put(fromName, to);
+        namePositionMappings.put(toName, from);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    public DesignStructureMatrix<Dependency> clone() {
+        Map<String, Integer> _cluster_end_position_mappings = new HashMap<String, Integer>();
+        Map<String, Integer> _cluster_start_position_mappings = new HashMap<String, Integer>();
+        Map<String, Integer> _name_position_mappings = new HashMap<String, Integer>();
+        Map<Integer, String> _position_name_mappings = new HashMap<Integer, String>();
+        Dependency[][] map = new Dependency[this.map.length][this.map.length];
+
+        for (String key : this.clusterEndPositionMappings.keySet()) {
+            _cluster_end_position_mappings.put(new String(key), new Integer(this.clusterEndPositionMappings.get(key)));
+        }
+        for (String key : this.clusterStartPositionMappings.keySet()) {
+            _cluster_start_position_mappings.put(new String(key), new Integer(this.clusterStartPositionMappings.get(key)));
+        }
+        for (String key : this.namePositionMappings.keySet()) {
+            _name_position_mappings.put(new String(key), new Integer(this.namePositionMappings.get(key)));
+        }
+        for (Integer key : this.positionNameMappings.keySet()) {
+            _position_name_mappings.put(new Integer(key), new String(this.positionNameMappings.get(key)));
+        }
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                map[i][j] = this.map[i][j];
+            }
+        }
+        return new DependencyDSM(_cluster_end_position_mappings, _cluster_start_position_mappings, _name_position_mappings, _position_name_mappings, map);
+    }
+
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.jdsm.DesignStructureMatrix#saveToXml(java.io.OutputStream)
+     */
+    public void saveToXml(OutputStream outputStream) throws XMLStreamException {
+        XMLObjectWriter writer = XMLObjectWriter.newInstance(outputStream);
+        writer.setIndentation("\t");
+        writer.write(this, this.getClass().getCanonicalName(), DependencyDSM.class);
+        writer.close();
+        logger.info("Saved DSM to XML");
+    }
+
+    /* (non-Javadoc)
+     * @see edu.carleton.tim.jdsm.DesignStructureMatrix#loadFromXml(java.io.InputStream)
+     */
+    public void loadFromXml(InputStream outputStream) throws XMLStreamException {
+        XMLObjectReader reader = XMLObjectReader.newInstance(outputStream);
+        DependencyDSM dsm = reader.read(this.getClass().getCanonicalName(), DependencyDSM.class);
+        reader.close();
+        clusterEndPositionMappings = dsm.clusterEndPositionMappings;
+        clusterStartPositionMappings = dsm.clusterStartPositionMappings;
+        namePositionMappings = dsm.namePositionMappings;
+        positionNameMappings = dsm.positionNameMappings;
+        map = dsm.map;
+        logger.info("Loaded DSM from XML");
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        String result = new String("\n");
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                result += map[i][j] + "\t";
+            }
+            result += "\n";
+        }
+        return result;
+    }
+
+    /**
+     * The Constant XML.
+     */
+    protected static final XMLFormat<DependencyDSM> XML = new XMLFormat<DependencyDSM>(DependencyDSM.class) {
+
+        @Override
+        public void read(InputElement xml, DependencyDSM dsm)
+                throws XMLStreamException {
+            dsm.clusterEndPositionMappings = xml.get("clusterEndPositionMappings");
+            dsm.clusterStartPositionMappings = xml.get("clusterStartPositionMappings");
+            dsm.namePositionMappings = xml.get("namePositionMappings");
+            dsm.positionNameMappings = xml.get("positionNameMappings");
+            dsm.map = xml.get("map");
+        }
+
+        @Override
+        public void write(DependencyDSM dsm, OutputElement xml)
+                throws XMLStreamException {
+            xml.add(dsm.clusterEndPositionMappings, "clusterEndPositionMappings");
+            xml.add(dsm.clusterStartPositionMappings, "clusterStartPositionMappings");
+            xml.add(dsm.namePositionMappings, "namePositionMappings");
+            xml.add(dsm.positionNameMappings, "positionNameMappings");
+            xml.add(dsm.map, "map");
+        }
+    };
 
 }

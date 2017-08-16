@@ -34,12 +34,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package edu.carleton.tim.jdsm.dependency;
 
+import edu.carleton.tim.jdsm.DesignStructureMatrix;
+import edu.carleton.tim.jdsm.RealNumberDSM;
 import org.jscience.mathematics.number.ModuloInteger;
 import org.jscience.mathematics.number.Real;
 import org.jscience.mathematics.structure.Field;
-
-import edu.carleton.tim.jdsm.DesignStructureMatrix;
-import edu.carleton.tim.jdsm.RealNumberDSM;
 
 
 /**
@@ -59,129 +58,133 @@ import edu.carleton.tim.jdsm.RealNumberDSM;
  * <br>
  * For a implementation of {@link DesignStructureMatrix} with values of the
  * algebraic field {@link Real}
- * 
- * @see RealNumberDSM
+ *
  * @author Roberto Milev
+ * @see RealNumberDSM
  */
 public class Dependency implements Field<Dependency> {
 
-	/** The Constant NO. */
-	public static final Dependency NO = new Dependency(false);
+    /**
+     * The Constant NO.
+     */
+    public static final Dependency NO = new Dependency(false);
 
-	/** The Constant YES. */
-	public static final Dependency YES = new Dependency(true);
+    /**
+     * The Constant YES.
+     */
+    public static final Dependency YES = new Dependency(true);
 
-	/** The _value. */
-	private boolean _value;
+    /**
+     * The _value.
+     */
+    private boolean _value;
 
-	/**
-	 * Instantiates a new dependency.
-	 */
-	public Dependency() {
-		super();
-	}
+    /**
+     * Instantiates a new dependency.
+     */
+    public Dependency() {
+        super();
+    }
 
-	/**
-	 * Instantiates a new dependency.
-	 * 
-	 * @param value
-	 *            the value
-	 */
-	public Dependency(boolean value) {
-		_value = value;
-	}
+    /**
+     * Instantiates a new dependency.
+     *
+     * @param value the value
+     */
+    public Dependency(boolean value) {
+        _value = value;
+    }
 
-	/**
-	 * Instantiates a new dependency.
-	 * 
-	 * @param dependency
-	 *            the dependency
-	 */
-	public Dependency(Dependency dependency) {
-		_value = dependency._value;
-	}
+    /**
+     * Instantiates a new dependency.
+     *
+     * @param dependency the dependency
+     */
+    public Dependency(Dependency dependency) {
+        _value = dependency._value;
+    }
 
-	/* (non-Javadoc)
-	 * @see javolution.lang.ValueType#copy()
-	 */
-	public Dependency copy() {
-		return _value ? YES : NO;
-	}
+    /* (non-Javadoc)
+     * @see javolution.lang.ValueType#copy()
+     */
+    public Dependency copy() {
+        return _value ? YES : NO;
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Dependency)) {
-			return false;
-		} else {
-			return ((Dependency) obj)._value == this._value;
-		}
-	}
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Dependency)) {
+            return false;
+        } else {
+            return ((Dependency) obj)._value == this._value;
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return _value ? 1231 : 1237;
-	}
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return _value ? 1231 : 1237;
+    }
 
-	/**
-	 * Long value.
-	 * 
-	 * @return the long
-	 */
-	public long longValue() {
-		return _value ? 1 :0;
-	}
+    /**
+     * Long value.
+     *
+     * @return the long
+     */
+    public long longValue() {
+        return _value ? 1 : 0;
+    }
 
-	/**
-	 * Boolean value.
-	 * 
-	 * @return true, if successful
-	 */
-	public boolean booleanValue() {
-		return _value;
-	}
+    /**
+     * Boolean value.
+     *
+     * @return true, if successful
+     */
+    public boolean booleanValue() {
+        return _value;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.jscience.mathematics.structure.GroupMultiplicative#inverse()
-	 */
-	public Dependency inverse() {
-		throw new RuntimeException();
-		// return _value ? YES : NO;
-	}
+    /* (non-Javadoc)
+     * @see org.jscience.mathematics.structure.GroupMultiplicative#inverse()
+     */
+    public Dependency inverse() {
+        throw new RuntimeException();
+        // return _value ? YES : NO;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.jscience.mathematics.structure.GroupAdditive#opposite()
-	 */
-	public Dependency opposite() {
-		return !_value ? YES : NO;
-	}
+    /* (non-Javadoc)
+     * @see org.jscience.mathematics.structure.GroupAdditive#opposite()
+     */
+    public Dependency opposite() {
+        return !_value ? YES : NO;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.jscience.mathematics.structure.GroupAdditive#plus(java.lang.Object)
-	 */
-	public Dependency plus(Dependency arg0) {
-		return _value || arg0._value ? YES : NO;
-	}
+    /* (non-Javadoc)
+     * @see org.jscience.mathematics.structure.GroupAdditive#plus(java.lang.Object)
+     */
+    public Dependency plus(Dependency arg0) {
+        return _value || arg0._value ? YES : NO;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.jscience.mathematics.structure.Ring#times(java.lang.Object)
-	 */
-	public Dependency times(Dependency arg0) {
-		return _value && arg0._value ? YES : NO;
-	}
+    /* (non-Javadoc)
+     * @see org.jscience.mathematics.structure.Ring#times(java.lang.Object)
+     */
+    public Dependency times(Dependency arg0) {
+        return _value && arg0._value ? YES : NO;
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return _value ? "1" : "0";
-	}
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return _value ? "1" : "0";
+    }
 
 //	/** The Constant XML. */
 //	protected static final XMLFormat<Dependency> XML = new XMLFormat<Dependency>(
