@@ -40,7 +40,12 @@ public class Demo {
         int nrVerticalBusses = clusteredCostResult.getVerticalBusses().size();
         long clusteredCost = clusteredCostResult.getClusteredCost();
         double relativeClusteredCost = clusteredCostResult.getRelativeClusteredCost();
-        clusteredCostResult.getDsm().saveToXml(new FileOutputStream("dsm_clustered.xml"));
+
+        DesignStructureMatrix<Dependency> costResultDsm = clusteredCostResult.getDsm();
+        costResultDsm.saveToXml(new FileOutputStream("dsm_clustered.xml"));
+
+        //save the DSM to SVG
+        SVGOutput.printDsm(costResultDsm, new FileOutputStream("dsm_clustered.svg"));
 
     }
 }
