@@ -50,6 +50,8 @@ import java.io.PrintStream;
  */
 public class SVGOutput {
 
+    private final static int SCALE = 10;
+
     /**
      * The logger.
      */
@@ -107,6 +109,8 @@ public class SVGOutput {
      * @param height      the height
      */
     private static void printHeader(PrintStream printStream, int width, int height) {
+        width = width * SCALE;
+        height = height * SCALE;
         printStream.println("<?xml version=\"1.0\" standalone=\"no\"?>");
         printStream.println("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" " +
                 "\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
@@ -129,11 +133,17 @@ public class SVGOutput {
     private static void printRectangle(PrintStream printStream, int x, int y,
                                        int width, int height) {
         // coordinates in SVG are inverse from the matrix coordinates
+        boolean dot = width == 1 && height == 1;
+        x = x * SCALE;
+        y = y * SCALE;
+        width = width * SCALE;
+        height = height * SCALE;
+
         printStream.println("    <rect width=\"" + width + "\"  " +
                 "height=\"" + height + "\" " +
                 "x=\"" + y + "\" " +
                 "y=\"" + x + "\" " +
-                (width == 1 && height == 1 ? " fill=\"black\" " : "") + "/>");
+                (dot ? " fill=\"black\" " : "") + "/>");
 
     }
 }
