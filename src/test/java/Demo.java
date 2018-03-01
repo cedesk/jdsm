@@ -17,7 +17,7 @@ import java.io.FileOutputStream;
 public class Demo {
 
     public static void main(String args[]) throws SAXException, ParserConfigurationException, FileNotFoundException, JAXBException, XMLStreamException {
-        //load from Dependency Finder XLM
+        //load from Dependency Finder XML
         String inputFileName = args[0];
         String filterExpression = args[1];
         DesignStructureMatrix<Dependency> dsm = DependencyFinderDSMProvider.loadDesignStructureMatrix(inputFileName, filterExpression);
@@ -41,7 +41,7 @@ public class Demo {
         long clusteredCost = clusteredCostResult.getClusteredCost();
         double relativeClusteredCost = clusteredCostResult.getRelativeClusteredCost();
 
-        DesignStructureMatrix<Dependency> costResultDsm = clusteredCostResult.getDsm();
+        DesignStructureMatrix costResultDsm = clusteredCostResult.getDsm();
         costResultDsm.saveToXml(new FileOutputStream("dsm_clustered.xml"));
 
         //save the DSM to SVG

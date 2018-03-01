@@ -37,7 +37,9 @@ package edu.carleton.tim.jdsm.dependency.analysis;
 import edu.carleton.tim.jdsm.DesignStructureMatrix;
 import edu.carleton.tim.jdsm.dependency.Dependency;
 import org.apache.log4j.Logger;
+import org.jscience.mathematics.number.Number;
 import org.jscience.mathematics.number.Rational;
+import org.jscience.mathematics.structure.Field;
 
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
@@ -85,7 +87,17 @@ public class ClusteredCost {
     /**
      * The dsm.
      */
-    protected DesignStructureMatrix<Dependency> dsm;
+    protected DesignStructureMatrix<?> dsm;
+
+    /**
+     * Instantiates a new clustered cost.
+     *
+     * @param dsm the dsm
+     * @throws JAXBException the JAXB exception
+     */
+    private ClusteredCost(DesignStructureMatrix<?> dsm) {
+        this.dsm = dsm;
+    }
 
     /**
      * Compute clustered cost.
@@ -94,7 +106,7 @@ public class ClusteredCost {
      * @param verticalBusTreshold the vertical bus treshold
      * @return a structure containing all outputs of the analysis
      */
-    public static ClusteredCostResult computeClusteredCost(DesignStructureMatrix<Dependency> dsm, double verticalBusTreshold) {
+    public static ClusteredCostResult computeClusteredCost(DesignStructureMatrix<?> dsm, double verticalBusTreshold) {
         logger.info("Started computing clustered cost.");
         ClusteredCost instance = new ClusteredCost(dsm.clone());
         instance.computeVerticalBusses(verticalBusTreshold);
@@ -125,7 +137,7 @@ public class ClusteredCost {
      * @param verticalBusTreshold the vertical bus treshold
      * @return a clustered DSM
      */
-    public static DesignStructureMatrix<Dependency> clusterDsm(DesignStructureMatrix<Dependency> dsm, double verticalBusTreshold) {
+    public static DesignStructureMatrix<?> clusterDsm(DesignStructureMatrix<Dependency> dsm, double verticalBusTreshold) {
         logger.info("Started computing clustered cost.");
         ClusteredCost instance = new ClusteredCost(dsm.clone());
         instance.computeVerticalBusses(verticalBusTreshold);
@@ -150,7 +162,7 @@ public class ClusteredCost {
         for (int j = 0; j < mapSize; j++) {
             double dependenciesCount = 0;
             for (int i = 0; i < mapSize; i++) {
-                if (dsm.getMap()[i][j].booleanValue())
+                if (booleanValue(dsm.getMap()[i][j]))
                     dependenciesCount++;
             }
             if ((dependenciesCount / mapSize) > treshold) {
@@ -161,14 +173,13 @@ public class ClusteredCost {
         return result;
     }
 
-    /**
-     * Instantiates a new clustered cost.
-     *
-     * @param dsm the dsm
-     * @throws JAXBException the JAXB exception
-     */
-    private ClusteredCost(DesignStructureMatrix<Dependency> dsm) {
-        this.dsm = dsm;
+    private boolean booleanValue(Field field) {
+        if (field instanceof Dependency) {
+            return ((Dependency) field).booleanValue();
+        } else if (field instanceof Number) {
+            return ((Number) field).intValue() > 0;
+        } else
+            throw new UnsupportedOperationException();
     }
 
     /**
@@ -193,7 +204,7 @@ public class ClusteredCost {
      *
      * @return the design structure matrix< dependency>
      */
-    private DesignStructureMatrix<Dependency> performClustering() {
+    private DesignStructureMatrix<?> performClustering() {
         initClusters();
         Random random = new Random();
         dependencyCostSum = computeClusteredCost();
@@ -225,16 +236,25 @@ public class ClusteredCost {
     private double computeDependencyCost(int i, int j) {
         //if j is a vertical bus
         if (isVerticalBus(j)) {
-            return dsm.getMap()[i][j].longValue();
+            return doubleValue(dsm.getMap()[i][j]);
         }
         //if i and j are in same cluster
         else if (getCluster(i).equals(getCluster(j))) {
-            return dsm.getMap()[i][j].longValue() * Math.pow(getClusterSize(getCluster(i)), lambda);
+            return doubleValue(dsm.getMap()[i][j]) * Math.pow(getClusterSize(getCluster(i)), lambda);
         }
         //if i and j are not in same cluster
         else {
-            return dsm.getMap()[i][j].longValue() * Math.pow(dsm.getMap().length, lambda);
+            return doubleValue(dsm.getMap()[i][j]) * Math.pow(dsm.getMap().length, lambda);
         }
+    }
+
+    private double doubleValue(Field<?> field) {
+        if (field instanceof Dependency) {
+            return ((Dependency) field).longValue();
+        } else if (field instanceof Number) {
+            return ((Number) field).doubleValue();
+        } else
+            throw new UnsupportedOperationException();
     }
 
     /**
@@ -247,7 +267,7 @@ public class ClusteredCost {
     private Rational computeRelativeDependencyCost(int i, int j) {
         long N = dsm.getMap().length;
         long n = getClusterSize(getCluster(i));
-        long dsmValue = dsm.getMap()[i][j].longValue();
+        long dsmValue = ((long) doubleValue(dsm.getMap()[i][j]));
         // if j is a vertical bus
         if (isVerticalBus(j)) {
             return Rational.valueOf(dsmValue, (long) Math.pow(N, 4));
@@ -287,7 +307,7 @@ public class ClusteredCost {
      * Compute marginal cost of change.
      *
      * @param position      the position
-     * @param biddinCluster the biddin cluster
+     * @param biddinCluster the bidding cluster
      * @return the long
      */
     private long computeMarginalCostOfChange(int position, String biddinCluster) {
@@ -300,27 +320,27 @@ public class ClusteredCost {
 
             for (int i = dsm.getClusterStartPositionMappings().get(biddinCluster); i <= dsm.getClusterEndPositionMappings().get(biddinCluster); i++) {
                 if (!isVerticalBus(i)) {
-                    totalChangeInCost += dsm.getMap()[i][position].longValue() * (-Math.pow(N, lambda) + Math.pow(n, lambda));
-                    totalChangeInCost += dsm.getMap()[position][i].longValue() * (-Math.pow(N, lambda) + Math.pow(n, lambda));
+                    totalChangeInCost += doubleValue(dsm.getMap()[i][position]) * (-Math.pow(N, lambda) + Math.pow(n, lambda));
+                    totalChangeInCost += doubleValue(dsm.getMap()[position][i]) * (-Math.pow(N, lambda) + Math.pow(n, lambda));
                 }
             }
             for (int i = dsm.getClusterStartPositionMappings().get(sourceCluster); i <= dsm.getClusterEndPositionMappings().get(sourceCluster); i++) {
                 if (!isVerticalBus(i)) {
-                    totalChangeInCost += dsm.getMap()[position][i].longValue() * (-Math.pow(m, lambda) + Math.pow(N, lambda));
-                    totalChangeInCost += dsm.getMap()[i][position].longValue() * (-Math.pow(m, lambda) + Math.pow(N, lambda));
+                    totalChangeInCost += doubleValue(dsm.getMap()[position][i]) * (-Math.pow(m, lambda) + Math.pow(N, lambda));
+                    totalChangeInCost += doubleValue(dsm.getMap()[i][position]) * (-Math.pow(m, lambda) + Math.pow(N, lambda));
                 }
             }
             for (int i = dsm.getClusterStartPositionMappings().get(sourceCluster); i <= dsm.getClusterEndPositionMappings().get(sourceCluster); i++) {
                 for (int j = dsm.getClusterStartPositionMappings().get(sourceCluster); j <= dsm.getClusterEndPositionMappings().get(sourceCluster); j++) {
                     if (i != position && j != position && !isVerticalBus(j)) {
-                        totalChangeInCost += dsm.getMap()[i][j].longValue() * (-Math.pow(m, lambda) + Math.pow(m - 1, lambda));
+                        totalChangeInCost += doubleValue(dsm.getMap()[i][j]) * (-Math.pow(m, lambda) + Math.pow(m - 1, lambda));
                     }
                 }
             }
             for (int i = dsm.getClusterStartPositionMappings().get(biddinCluster); i <= dsm.getClusterEndPositionMappings().get(biddinCluster); i++) {
                 for (int j = dsm.getClusterStartPositionMappings().get(biddinCluster); j <= dsm.getClusterEndPositionMappings().get(biddinCluster); j++) {
                     if (i != position && j != position && !isVerticalBus(j)) {
-                        totalChangeInCost += dsm.getMap()[i][j].longValue() * (-Math.pow(n - 1, lambda) + Math.pow(n, lambda));
+                        totalChangeInCost += doubleValue(dsm.getMap()[i][j]) * (-Math.pow(n - 1, lambda) + Math.pow(n, lambda));
                     }
                 }
             }
@@ -473,6 +493,11 @@ public class ClusteredCost {
 
 
         /**
+         * The dsm.
+         */
+        private DesignStructureMatrix<?> dsm;
+
+        /**
          * Instantiates a new clustered cost result.
          *
          * @param dsm                   the dsm
@@ -480,7 +505,7 @@ public class ClusteredCost {
          * @param clusteredCost         the clustered cost
          * @param relativeClusteredCost the relative clustered cost
          */
-        public ClusteredCostResult(DesignStructureMatrix<Dependency> dsm,
+        public ClusteredCostResult(DesignStructureMatrix<?> dsm,
                                    List<String> verticalBusses, long clusteredCost,
                                    double relativeClusteredCost) {
             super();
@@ -489,11 +514,6 @@ public class ClusteredCost {
             this.clusteredCost = clusteredCost;
             this.relativeClusteredCost = relativeClusteredCost;
         }
-
-        /**
-         * The dsm.
-         */
-        private DesignStructureMatrix<Dependency> dsm;
 
         /**
          * The vertical busses.
@@ -515,7 +535,7 @@ public class ClusteredCost {
          *
          * @return the dsm
          */
-        public DesignStructureMatrix<Dependency> getDsm() {
+        public DesignStructureMatrix<?> getDsm() {
             return dsm;
         }
 
