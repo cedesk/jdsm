@@ -6,7 +6,7 @@
 
     <groupId>jDSM</groupId>
     <artifactId>jDSM</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <properties>
         <jdk.version>1.8</jdk.version>
     </properties>
@@ -24,13 +24,12 @@
             <artifactId>oro</artifactId>
             <version>2.0.8</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
