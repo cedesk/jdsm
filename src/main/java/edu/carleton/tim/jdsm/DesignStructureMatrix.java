@@ -125,6 +125,22 @@ public interface DesignStructureMatrix<F extends Field<F>> {
     public DesignStructureMatrix<F> clone();
 
     /**
+     * Transpose.
+     *
+     * @return a transposed design structure matrix; flipped along the diagonal
+     */
+    public default DesignStructureMatrix<F> transpose() {
+        DesignStructureMatrix<F> transposed = clone();
+        int size = getMap().length;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                transposed.getMap()[j][i] = this.getMap()[i][j];
+            }
+        }
+        return transposed;
+    }
+
+    /**
      * Serializes the object to XML format.
      *
      * @param outputStream stream to write XML to

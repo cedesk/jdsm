@@ -6,7 +6,7 @@
 
     <groupId>jDSM</groupId>
     <artifactId>jDSM</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <properties>
         <jdk.version>1.8</jdk.version>
     </properties>

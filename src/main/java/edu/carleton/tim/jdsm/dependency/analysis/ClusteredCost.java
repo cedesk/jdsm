@@ -41,6 +41,7 @@ import org.jscience.mathematics.number.Rational;
 
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -98,6 +99,36 @@ public class ClusteredCost {
         logger.info("Started computing clustered cost.");
         ClusteredCost instance = new ClusteredCost(dsm.clone());
         instance.computeVerticalBusses(verticalBusTreshold);
+        logger.info("Computed " + instance.verticalBusses.size() + " vertical busses.");
+        instance.initClusters();
+        logger.info("Initiated clusters.");
+        logger.info("Started clustering algorithm.");
+        instance.performClustering();
+        logger.info("Finished clustering algorithm.");
+        logger.info("Computed " + instance.dsm.getClusterStartPositionMappings().size() + " clusters.");
+
+        long clusteredCost = instance.computeClusteredCost();
+        double relativeClusteredCost = instance.computeRelativeClusteredCost();
+
+        ClusteredCostResult result = instance.new ClusteredCostResult(instance.dsm,
+                instance.verticalBusses, clusteredCost, relativeClusteredCost);
+
+        logger.info("Computed clustered cost: " + clusteredCost);
+        logger.info("Computed relative clustered cost: " + relativeClusteredCost);
+        return result;
+    }
+
+    /**
+     * Compute clustered cost.
+     *
+     * @param dsm                 the DSM to be analyzed
+     * @param verticalBuses      the names of vertical buses
+     * @return a structure containing all outputs of the analysis
+     */
+    public static ClusteredCostResult computeClusteredCost(DesignStructureMatrix<Dependency> dsm, String... verticalBuses) {
+        logger.info("Started computing clustered cost.");
+        ClusteredCost instance = new ClusteredCost(dsm.clone());
+        instance.verticalBusses = Arrays.asList(verticalBuses);
         logger.info("Computed " + instance.verticalBusses.size() + " vertical busses.");
         instance.initClusters();
         logger.info("Initiated clusters.");
